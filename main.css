@@ -1,0 +1,31 @@
+* {
+    margin: 0;
+    padding: 0;
+    background-color: black;
+}
+h1 {
+    padding-left: 25rem;
+    color: goldenrod;
+    font-size: 6rem;
+}
+.text {
+    margin-top: 10vh;
+    justify-items: center;
+    padding-left: 25vw;
+    padding-right: 15vw;
+}
+#textinput {
+    border: 5px groove gold;
+    color: pink;
+    font-size: 3rem;
+}
+.btnre {
+    padding-left: 40vw;
+    margin-top: 5vh;
+}
+#submit {
+    background-color: blanchedalmond;
+    font-size: xx-large;
+    font: sans-serif;
+    font-weight: bold;
+}
