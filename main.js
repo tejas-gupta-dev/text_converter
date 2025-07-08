@@ -15,28 +15,42 @@ result.addEventListener("click", () => {
     }
 });*/
 
-const intext = document.getElementById("textinput");
-const result = document.getElementById("submit");
+const input = document.getElementById("textinput");
+    const button = document.getElementById("submit");
+    const error = document.querySelector(".error");
 
-result.addEventListener("click", () => {
-    const speechsynth = window.speechSynthesis;
-    const err = document.querySelector(".error");
-    const tex = intext.value;
+    // Optional: Load voices early for some browsers
+    speechSynthesis.onvoiceschanged = () => {
+      speechSynthesis.getVoices();
+    };
 
-    if (!speechsynth.speaking && !tex.trim().length) {
-        err.textContent = "Text missing";
-        return;
-    }
+    button.addEventListener("click", () => {
+      const text = input.value.trim();
+      const synth = window.speechSynthesis;
 
-    if (!speechsynth.speaking && tex.trim().length) {
-        err.textContent = "";
-        const newutter = new SpeechSynthesisUtterance(tex);
-        result.textContent = "Speaking...";
+      if (!text) {
+        error.textContent = "⚠️ Text is missing.";
+        return;
+      }
 
-        newutter.onend = () => {
-            result.textContent = "Speak";
-        };
+      error.textContent = "";
 
-        speechsynth.speak(newutter);
-    }
-});
+      // Cancel previous speech if still speaking
+      if (synth.speaking) {
+        synth.cancel();
+      }
+
+      const utterance = new SpeechSynthesisUtterance(text);
+
+      // Optional: Set voice or rate
+      // const voices = synth.getVoices();
+      // utterance.voice = voices.find(v => v.lang === 'en-US');
+      // utterance.rate = 1;
+
+      utterance.onend = () => {
+        button.textContent = "Speak";
+      };
+
+      button.textContent = "🔊 Speaking...";
+      synth.speak(utterance);
+    });
