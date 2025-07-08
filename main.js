@@ -38,8 +38,8 @@ const input = document.getElementById("textinput");
 
       // Optional: Set voice, volume, rate, pitch
       utterance.volume = 1.0;
-      utterance.rate = 1;
-      utterance.pitch = 1.7;
+      utterance.rate = 0.5;
+      utterance.pitch = 1.5;
 
       // Try to set an English voice if available
       const voices = synth.getVoices();
