@@ -16,42 +16,45 @@ result.addEventListener("click", () => {
 });*/
 
 const input = document.getElementById("textinput");
-const button = document.getElementById("submit");
-const error = document.querySelector(".error");
+    const button = document.getElementById("submit");
+    const error = document.getElementById("errorMsg");
 
-button.addEventListener("click", () => {
-  const text = input.value.trim();
-  const synth = window.speechSynthesis;
+    button.addEventListener("click", () => {
+      const text = input.value.trim();
+      const synth = window.speechSynthesis;
 
-  if (!text) {
-    error.textContent = "⚠️ Text is missing.";
-    return;
-  }
+      if (!text) {
+        error.textContent = "⚠️ Please enter some text.";
+        return;
+      }
 
-  error.textContent = "";
+      error.textContent = "";
 
-  if (synth.speaking) synth.cancel();
+      if (synth.speaking) {
+        synth.cancel(); // stop previous speech
+      }
 
-  const utterance = new SpeechSynthesisUtterance(text);
+      const utterance = new SpeechSynthesisUtterance(text);
 
-  // Load voices and pick loudest one
-  const voices = synth.getVoices();
-  const preferred = voices.find(v => v.name.includes("Google US") || v.lang === "en-US");
-  if (preferred) utterance.voice = preferred;
+      // Optional: Set voice, volume, rate, pitch
+      utterance.volume = 1.0;
+      utterance.rate = 1;
+      utterance.pitch = 1.7;
 
-  utterance.volume = 1.0;  // Max volume
-  utterance.rate = 1;      // Normal rate
-  utterance.pitch = 1.2;   // Slightly sharper
+      // Try to set an English voice if available
+      const voices = synth.getVoices();
+      const english = voices.find(v => v.lang.startsWith("en"));
+      if (english) utterance.voice = english;
 
-  utterance.onend = () => {
-    button.textContent = "Speak";
-  };
+      utterance.onend = () => {
+        button.textContent = "Speak";
+      };
 
-  button.textContent = "🔊 Speaking...";
-  synth.speak(utterance);
-});
+      button.textContent = "🔊 Speaking...";
+      synth.speak(utterance);
+    });
 
-// Ensure voices are loaded
-speechSynthesis.onvoiceschanged = () => {
-  speechSynthesis.getVoices();
-};
+    // Load voices early for some browsers
+    window.speechSynthesis.onvoiceschanged = () => {
+      window.speechSynthesis.getVoices();
+    };
