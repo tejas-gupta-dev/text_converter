@@ -33,12 +33,15 @@ button.addEventListener("click", () => {
   if (synth.speaking) synth.cancel();
 
   const utterance = new SpeechSynthesisUtterance(text);
-  const voices = synth.getVoices();
-  const englishVoice = voices.find(v => v.lang.startsWith("en"));
-  if (englishVoice) utterance.voice = englishVoice;
 
-  utterance.rate = 1;
-  utterance.pitch = 1;
+  // Load voices and pick loudest one
+  const voices = synth.getVoices();
+  const preferred = voices.find(v => v.name.includes("Google US") || v.lang === "en-US");
+  if (preferred) utterance.voice = preferred;
+
+  utterance.volume = 1.0;  // Max volume
+  utterance.rate = 1;      // Normal rate
+  utterance.pitch = 1.2;   // Slightly sharper
 
   utterance.onend = () => {
     button.textContent = "Speak";
@@ -48,7 +51,7 @@ button.addEventListener("click", () => {
   synth.speak(utterance);
 });
 
-// Force voice load
+// Ensure voices are loaded
 speechSynthesis.onvoiceschanged = () => {
   speechSynthesis.getVoices();
 };
